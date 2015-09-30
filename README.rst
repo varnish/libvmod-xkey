@@ -23,9 +23,9 @@ SYNOPSIS
     sub vcl_recv {
         if (req.http.xkey-purge) {
             if (xkey.purge(req.http.xkey-purge) != 0) {
-                error 200 "Purged";
+                return (synth(200, "Purged"));
             } else {
-                error 404 "Key not found";
+                return (synth(404, "Key not found"));
             }
         }
     }
