@@ -1,0 +1,68 @@
+varnishtest "Test xkey vmod"
+
+server s1 {
+	rxreq
+	txresp -hdr "xkey: asdf" -hdr "X-HashTwo: fdsa"
+
+	rxreq
+	txresp -hdr "xkey: asdf" -hdr "X-HashTwo: fdsa"
+} -start
+
+varnish v1 -vcl+backend {
+	import xkey from "${vmod_topbuild}/src/.libs/libvmod_xkey.so";
+
+	sub vcl_recv {
+		if (req.http.xkey-purge) {
+			if (xkey.purge(req.http.xkey-purge) != 0) {
+				return (synth(200, "Purged"));
+			} else {
+				return (synth(404, "No key"));
+			}
+		}
+	}
+
+	sub vcl_backend_response {
+		set beresp.ttl = 60s;
+		set beresp.grace = 0s;
+		set beresp.keep = 0s;
+	}
+} -start
+
+# First check xkey header
+client c1 {
+	txreq
+	rxresp
+} -run
+
+varnish v1 -expect n_object == 1
+
+client c1 {
+	txreq -hdr "xkey-purge: asdf"
+	rxresp
+	expect resp.status == 200
+	expect resp.msg == "Purged"
+} -run
+
+delay 1
+
+varnish v1 -expect n_object == 0
+
+# Check again using the legacy X-HashTwo header
+
+client c1 {
+	txreq
+	rxresp
+} -run
+
+varnish v1 -expect n_object == 1
+
+client c1 {
+	txreq -hdr "xkey-purge: fdsa"
+	rxresp
+	expect resp.status == 200
+	expect resp.msg == "Purged"
+} -run
+
+delay 1
+
+varnish v1 -expect n_object == 0

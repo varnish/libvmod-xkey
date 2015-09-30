@@ -1,0 +1,92 @@
+Copyright (c) 2012 Varnish Software AS
+All rights reserved.
+
+Varnish Tools License (VTL)
+---------------------------
+
+The Software is licensed on a consecutive basis (subscription). As a
+party to a valid and effective Service agreement you are automatically
+entitled to a license. Other licensing of the Software than
+consecutive licensing under a Service agreement must be subject to
+specific written agreement for validity. The following shall apply to
+either type of license grants.
+
+Subject to the terms of this VTL and other agreement between the
+parties, the licensor hereby grants to Licensee a non-exclusive,
+non-transferable, non-sublicensable and limited license to install,
+use, study and modify the Software for use within its organization.
+
+Licensee may not transfer any of its rights under this VTL without
+the prior and express written consent of Varnish Software.
+
+Third party software is licensed under the license of such third party. 
+
+.. _consecutive_license_grant:
+
+Consecutive license grant (subscription)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The license shall be effective for the duration of the Service
+agreement and as long as this license is otherwise complied to. The
+payment of the fees under the Service agreement or any other
+applicable agreement entitles the Customer to Updates and New versions
+of the Software from time to time.
+
+
+INTELLECTUAL PROPERTY RIGHTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Varnish Software and its suppliers does not by this VTL transfer any
+copyrights or other intellectual property rights relating to the
+Software to the Licensee. Such rights are protected by intellectual
+property legislation in the United States, Europe and other
+jurisdictions and by international treaty provisions. Varnish Software
+and its suppliers retain all rights to the Software that are not
+expressly granted to the Licensee through this VTL.
+ 
+Licensee is not allowed to remove, alter or destroy any proprietary,
+trademark or copyright markings or notices placed upon or contained
+within the Software.
+
+
+Varnish Software may terminate the VTL if the Licensee fails to
+comply with the terms of this VTL, hereunder fails to pay the
+stipulated fees. In the event of such termination, the Licensee shall
+immediately stop using the Software, return any received media and
+documentation, and destroy or permanently delete any installed
+versions of the Software, and confirm such destruction or deletion in
+writing within 7 days.
+
+NO WARRANTY
+~~~~~~~~~~~
+
+To the maximum extent permitted by law, Varnish Software disclaims any
+warranty for the Software (except as stated in clause 6 of the General
+Subscription Agreement). The Software, any services and any related
+documentation is provided on an "as is" basis without warranty of any
+kind, whether express or implied, including, but not limited to,
+implied warranties of merchantability, fitness for a particular
+purpose or non-infringement (except as stated in clause 6). Hereunder
+the parties acknowledges that Varnish Software does not warrant for
+the absence of any errors in the Software, and that any such errors
+does not constitute a contractual defect.
+
+THIRD-PARTY TERMS
+~~~~~~~~~~~~~~~~~
+
+For third-party software that is made available to the Licensee by
+Varnish Software, the current terms of the relevant third party
+software supplier shall apply.
+
+Definitions
+~~~~~~~~~~~
+
+The following definitions shall apply to the VTL: 
+ 
+"New version" (of the Software) means a new edition of the Software
+containing functionality or properties not present in the previous
+edition of the Software.
+
+"Update" (of Software) means smaller adjustments of the Software with
+the existing functionality, normally by way of installation of a new
+copy of the Software.

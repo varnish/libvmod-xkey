@@ -1,0 +1,11 @@
+Source: libvmod-xkey
+Section: web
+Priority: extra
+Maintainer: Martin Blix Grydeland <martin@varnish-software.com>
+Build-Depends: debhelper (>= 7), build-essential, python-docutils
+Standards-Version: 3.8.1
+
+Package: libvmod-xkey
+Architecture: all
+Depends: varnish, ${misc:Depends}
+Description: Surrogate keys support for Varnish Cache

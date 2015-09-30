@@ -1,0 +1,26 @@
+* TODO Optimize for the n million objects on one hash key purging case
+
+  The locking operations are not ideal when doing a purge on a hash
+  key containing a zillion objects. What will happen in that case is
+  that the xkey lock is taken, and then while iterating over the
+  objects the expiry time is updated. This will prevent cache inserts
+  for the time it takes to iterate.
+
+  Solution would be to (1) take a ref on all objects as they enter the
+  secondary hash (this allows releasing the xkey lock without
+  worry of the object disappearing under you) (this involves releasing
+  that ref on xkey removal), (2) have some sort of reference /
+  flags on the xkey trees (to make sure your current tree position
+  is lost while releasing the xkey lock), and (3) doing the expiry
+  in batches of n objects, releasing the lock in between batch fill
+  and expiry of a batch.
+
+* TODO Allow changing the magic header name
+
+  It should be possible to change the magic header that is searched on
+  new objects entering the cache. This could then be done in vcl_init.
+
+  It could perhaps also be an idea to have a list of special headers
+  that is searched.
+
+  Third, should we allow comma-separation in these headers?
