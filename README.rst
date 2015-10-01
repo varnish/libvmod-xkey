@@ -83,7 +83,7 @@ with the matching xkey header.::
     xkey-purge: 166412
 
 Note the xkey-purge header. It is probably a good idea to protect
-this with an ACL so random people from the internet can't purge your
+this with an ACL so random people from the Internet can't purge your
 cache.
 
 Varnish will find the objects and clear them out. Responding to the response.::
@@ -118,8 +118,13 @@ Description
 INSTALLATION
 ============
 
-See the Varnish Cache Plus manual for information on how to
-install a pre-made build of this module.
+The module can be installed using standard autotools:
+
+    ./configure
+    make
+    make install
+
+Header files must be installed.
 
 
 COPYRIGHT
