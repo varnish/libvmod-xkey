@@ -118,7 +118,7 @@ Description
 INSTALLATION
 ============
 
-The module can be installed using standard autotools:
+The module can be installed using standard autotools::
 
     ./configure
     make
