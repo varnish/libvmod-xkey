@@ -44,7 +44,7 @@ DESCRIPTION
 This vmod adds one or more secondary hashes to objects, allowing fast purging
 on all objects with this/these hash key/s.
 Hash keys have to be separated by one or more "space" characters.
-Space characters: {' ', '\n', '\t', '\v', '\f', '\r'}.
+Space characters: {' ', '\\n', '\\t', '\\v', '\\f', '\\r'}.
 
 You can use this to indicate relationships, a bit like a "tag". Then
 clear out all object that have this tag set. Two good use cases are
