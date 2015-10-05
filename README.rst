@@ -120,6 +120,7 @@ INSTALLATION
 
 The module can be installed using standard autotools::
 
+    ./autogen.sh
     ./configure
     make
     make install
