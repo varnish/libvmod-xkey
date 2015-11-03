@@ -31,7 +31,7 @@ SYNOPSIS
     }
 
     # The backend is responsible for setting the header.
-    # If you where to do it in VCL it will look something like this:
+    # If you were to do it in VCL it will look something like this:
     sub vcl_backend_response {
         # Use the header vmod to add multiple headers for multiple keys
         set beresp.http.xkey = "purgeable_hash_key";
@@ -50,18 +50,18 @@ You can use this to indicate relationships, a bit like a "tag". Then
 clear out all object that have this tag set. Two good use cases are
 news sites, where one might add all the stories mentioned on a
 particular page by article ID, letting each article referenced create
-a xkey header.
+an xkey header.
 
-Similarly with a ecommerce site, where various SKUs are often
+Similarly with an ecommerce site, where various SKUs are often
 referenced on a page.
 
 
 Example use 1
 -------------
 
-On a ecommerce site with we have the backend application issue a
-xkey header for every product that is referenced on that page. So
-the header for a certain page might look like this:::
+On an ecommerce site we have the backend application issue an xkey
+header for every product that is referenced on that page. So the
+header for a certain page might look like this:::
 
     HTTP/1.1 OK
     Server: Apache/2.2.15
@@ -74,7 +74,7 @@ the header for a certain page might look like this:::
 This requires a bit of VCL to be in place. The VCL can be found above.
 
 Then, in order to keep the web in sync with the database, a trigger is
-set up in the database. When an SKU is updated this will trigger a
+set up in the database. When an SKU is updated this will trigger an
 HTTP request towards the Varnish server, clearing out every object
 with the matching xkey header.::
 
