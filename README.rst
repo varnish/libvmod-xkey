@@ -33,18 +33,15 @@ SYNOPSIS
     # The backend is responsible for setting the header.
     # If you were to do it in VCL it will look something like this:
     sub vcl_backend_response {
-        # Use the header vmod to add multiple headers for multiple keys
-        set beresp.http.xkey = "purgeable_hash_key";
+        set beresp.http.xkey = "purgeable_hash_key1 purgable_hash_key2";
     }
 
 
 DESCRIPTION
 ===========
 
-This vmod adds one or more secondary hashes to objects, allowing fast purging
-on all objects with this/these hash key/s.
-Hash keys have to be separated by one or more "space" characters.
-Space characters: {' ', '\n', '\t', '\v', '\f', '\r'}.
+This vmod adds secondary hashes to objects, allowing fast purging on
+all objects with this hash key.
 
 You can use this to indicate relationships, a bit like a "tag". Then
 clear out all object that have this tag set. Two good use cases are
@@ -55,6 +52,14 @@ an xkey header.
 Similarly with an ecommerce site, where various SKUs are often
 referenced on a page.
 
+Hash keys are specified in the ``xkey`` response header. Multiple keys
+can be specified per header line with a space
+separator. Alternatively, they can be specified in multiple ``xkey``
+response headers.
+
+Preferably the secondary hash keys are set from the backend
+application, but can also be set from VCL in ``vcl_backend_response``
+as in the above example.
 
 Example use 1
 -------------
