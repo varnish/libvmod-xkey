@@ -79,8 +79,8 @@ struct xkey_hashhead {
 struct xkey_ochead {
 	struct xkey_ptrkey		key;
 	unsigned			magic;
-#define XKEY_OCHEAD_MAGIC			0x1E62445D
-	VTAILQ_ENTRY(xkey_ochead)		list;
+#define XKEY_OCHEAD_MAGIC		0x1E62445D
+	VTAILQ_ENTRY(xkey_ochead)	list;
 	VTAILQ_HEAD(,xkey_oc)		ocs;
 };
 
@@ -95,19 +95,16 @@ struct xkey_oc {
 
 #define POOL_MAX 5
 static struct {
-	VTAILQ_HEAD(,xkey_hashhead) hashheads;
-	int n_hashhead;
-	VTAILQ_HEAD(,xkey_ochead) ocheads;
-	int n_ochead;
-	VTAILQ_HEAD(,xkey_oc) ocs;
-	int n_oc;
+	VTAILQ_HEAD(,xkey_hashhead)	hashheads;
+	int				n_hashhead;
+	VTAILQ_HEAD(,xkey_ochead)	ocheads;
+	int				n_ochead;
+	VTAILQ_HEAD(,xkey_oc)		ocs;
+	int				n_oc;
 } xkey_pool = {
-	.hashheads = VTAILQ_HEAD_INITIALIZER(xkey_pool.hashheads),
-	.n_hashhead = 0,
-	.ocheads = VTAILQ_HEAD_INITIALIZER(xkey_pool.ocheads),
-	.n_ochead = 0,
-	.ocs = VTAILQ_HEAD_INITIALIZER(xkey_pool.ocs),
-	.n_oc = 0,
+	VTAILQ_HEAD_INITIALIZER(xkey_pool.hashheads), 0,
+	VTAILQ_HEAD_INITIALIZER(xkey_pool.ocheads), 0,
+	VTAILQ_HEAD_INITIALIZER(xkey_pool.ocs), 0
 };
 
 /*******************/
@@ -131,7 +128,7 @@ xkey_ptrcmp(const struct xkey_ptrkey *k1, const struct xkey_ptrkey *k2)
 	return (0);
 }
 
-static struct xkey_hashhead*
+static struct xkey_hashhead *
 xkey_hashhead_new()
 {
 	struct xkey_hashhead *head;
@@ -167,7 +164,7 @@ xkey_hashhead_delete(struct xkey_hashhead **phead)
 	FREE_OBJ(head);
 }
 
-static struct xkey_ochead*
+static struct xkey_ochead *
 xkey_ochead_new()
 {
 	struct xkey_ochead *head;
@@ -202,7 +199,7 @@ xkey_ochead_delete(struct xkey_ochead **phead)
 	FREE_OBJ(head);
 }
 
-static struct xkey_oc*
+static struct xkey_oc *
 xkey_oc_new()
 {
 	struct xkey_oc *oc;
@@ -235,7 +232,7 @@ xkey_oc_delete(struct xkey_oc **poc)
 	FREE_OBJ(oc);
 }
 
-static struct xkey_hashhead*
+static struct xkey_hashhead *
 xkey_hashtree_lookup(const unsigned char *digest, unsigned len)
 {
 	struct xkey_hashkey key, *pkey;
@@ -250,7 +247,7 @@ xkey_hashtree_lookup(const unsigned char *digest, unsigned len)
 	return (head);
 }
 
-static struct xkey_hashhead*
+static struct xkey_hashhead *
 xkey_hashtree_insert(const unsigned char *digest, unsigned len)
 {
 	struct xkey_hashkey *key;
@@ -268,7 +265,7 @@ xkey_hashtree_insert(const unsigned char *digest, unsigned len)
 	return (head);
 }
 
-static struct xkey_ochead*
+static struct xkey_ochead *
 xkey_octree_lookup(uintptr_t ptr)
 {
 	struct xkey_ptrkey key, *pkey;
@@ -282,7 +279,7 @@ xkey_octree_lookup(uintptr_t ptr)
 	return (head);
 }
 
-static struct xkey_ochead*
+static struct xkey_ochead *
 xkey_octree_insert(uintptr_t ptr)
 {
 	struct xkey_ptrkey *key;
@@ -300,7 +297,8 @@ xkey_octree_insert(uintptr_t ptr)
 }
 
 static void
-xkey_insert(struct objcore *objcore, const unsigned char *digest, unsigned len)
+xkey_insert(struct objcore *objcore, const unsigned char *digest,
+    unsigned len)
 {
 	struct xkey_ochead *ochead;
 	struct xkey_hashhead *hashhead;
@@ -547,7 +545,8 @@ vmod_event(VRT_CTX, struct vmod_priv *priv, enum vcl_event_e e)
 	case VCL_EVENT_LOAD:
 		AZ(pthread_mutex_lock(&mtx));
 		if (n_init == 0) {
-			xkey_cb_handle = EXP_Register_Callback(xkey_cb, NULL);
+			xkey_cb_handle =
+			    EXP_Register_Callback(xkey_cb, NULL);
 			AN(xkey_cb_handle);
 		}
 		n_init++;
