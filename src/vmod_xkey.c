@@ -490,7 +490,7 @@ vmod_purge(const struct vrt_ctx *vrt, const char *key)
 	if (vrt->req == NULL)
 		return (0);
 
-	if (!key)
+	if (!key || !*key)
 		return (0);
 
 	SHA256_Init(&ctx);
