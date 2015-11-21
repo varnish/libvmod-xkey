@@ -18,8 +18,8 @@ SYNOPSIS
 
     import xkey;
 
-    # Example of purging using xkey:
-    # The key to be purged is gotten from the xkey-purge header
+    # Example of purging using xkey.
+    # The key to be purged is specified in the xkey-purge header.
     sub vcl_recv {
         if (req.http.xkey-purge) {
             if (xkey.purge(req.http.xkey-purge) != 0) {
@@ -30,10 +30,10 @@ SYNOPSIS
         }
     }
 
-    # The backend is responsible for setting the header.
+    # Normally the backend is responsible for setting the header.
     # If you were to do it in VCL it will look something like this:
     sub vcl_backend_response {
-        set beresp.http.xkey = "purgeable_hash_key1 purgable_hash_key2";
+        set beresp.http.xkey = "purgeable_hash_key1 purgeable_hash_key2";
     }
 
 
@@ -49,7 +49,7 @@ news sites, where one might add all the stories mentioned on a
 particular page by article ID, letting each article referenced create
 an xkey header.
 
-Similarly with an ecommerce site, where various SKUs are often
+Similarly with an e-commerce site, where various SKUs are often
 referenced on a page.
 
 Hash keys are specified in the ``xkey`` response header. Multiple keys
@@ -64,14 +64,12 @@ as in the above example.
 Example use 1
 -------------
 
-On an ecommerce site we have the backend application issue an xkey
+On an e-commerce site we have the backend application issue an xkey
 header for every product that is referenced on that page. So the
-header for a certain page might look like this:::
+header for a certain page might look like this::
 
     HTTP/1.1 OK
     Server: Apache/2.2.15
-    Via: varnish (v4)
-    X-Varnish: 23984723 23231323
     xkey: 8155054
     xkey: 166412
     xkey: 234323
@@ -81,17 +79,17 @@ This requires a bit of VCL to be in place. The VCL can be found above.
 Then, in order to keep the web in sync with the database, a trigger is
 set up in the database. When an SKU is updated this will trigger an
 HTTP request towards the Varnish server, clearing out every object
-with the matching xkey header.::
+with the matching xkey header::
 
     GET / HTTP/1.1
     Host: www.example.com
     xkey-purge: 166412
 
 Note the xkey-purge header. It is probably a good idea to protect
-this with an ACL so random people from the Internet can't purge your
+this with an ACL so random people from the Internet cannot purge your
 cache.
 
-Varnish will find the objects and clear them out. Responding to the response.::
+Varnish will find the objects and clear them out, responding with::
 
     HTTP/1.1 200 Purged
     Date: Thu, 24 Apr 2014 17:08:28 GMT
@@ -117,8 +115,8 @@ Return value
 
 Description
 
-	Purges all the objects that was hashed on the given
-	key. Returns the number of objects that was purged.
+	Purges all objects hashed on the given key. Returns the number
+	of objects that were purged.
 
 softpurge
 ---------
