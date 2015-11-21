@@ -1,10 +1,10 @@
 varnishtest "Test xkey vmod multiple objects multiple keys"
 
 server s1 {
-       rxreq
-       txresp -hdr "xkey: asdf" -hdr "xkey: fdsa"
-       rxreq
-       txresp -hdr "xkey: asdf" -hdr "xkey: fdsa"
+	rxreq
+	txresp -hdr "xkey: asdf" -hdr "xkey: fdsa"
+	rxreq
+	txresp -hdr "xkey: asdf" -hdr "xkey: fdsa"
 } -start
 
 varnish v1 -vcl+backend {
@@ -41,7 +41,7 @@ client c1 {
 	rxresp
 	expect resp.status == 200
 	expect resp.msg == "Purged"
-} -run 
+} -run
 
 delay 1
 

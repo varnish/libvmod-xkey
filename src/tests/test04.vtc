@@ -5,10 +5,10 @@ varnishtest "Test xkey vmod multiple objects multiple keys cleanup"
 # show though.
 
 server s1 {
-       rxreq
-       txresp -hdr "xkey: asdf" -hdr "xkey: fdsa"
-       rxreq
-       txresp -hdr "xkey: asdf" -hdr "xkey: fdsa"
+	rxreq
+	txresp -hdr "xkey: asdf" -hdr "xkey: fdsa"
+	rxreq
+	txresp -hdr "xkey: asdf" -hdr "xkey: fdsa"
 } -start
 
 varnish v1 -vcl+backend {
