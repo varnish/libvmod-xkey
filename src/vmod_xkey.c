@@ -405,6 +405,8 @@ xkey_cb_insert(struct worker *wrk, struct objcore *objcore, void *priv)
 	const char hdr_h2[] = "X-HashTwo:";
 	const char *p, *p2;
 
+	(void)priv;
+
 	CHECK_OBJ_NOTNULL(objcore, OBJCORE_MAGIC);
 
 	HTTP_FOREACH_PACK(wrk, objcore, p) {
@@ -437,6 +439,9 @@ static void
 xkey_cb_remove(struct worker *wrk, struct objcore *objcore, void *priv)
 {
 	struct xkey_ochead *ochead;
+
+	(void)wrk;
+	(void)priv;
 
 	CHECK_OBJ_NOTNULL(objcore, OBJCORE_MAGIC);
 
