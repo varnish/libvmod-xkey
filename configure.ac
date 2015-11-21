@@ -9,7 +9,7 @@ AM_CONFIG_HEADER(config.h)
 AC_CANONICAL_SYSTEM
 AC_LANG(C)
 
-AM_INIT_AUTOMAKE([foreign])
+AM_INIT_AUTOMAKE([foreign color-tests parallel-tests])
 
 AC_GNU_SOURCE
 AC_PROG_CC
@@ -67,6 +67,9 @@ AC_PATH_PROG([VARNISHTEST], [varnishtest], [],
     [$LIBVARNISHAPI_BINDIR:$LIBVARNISHAPI_SBINDIR:$PATH])
 AC_PATH_PROG([VARNISHD], [varnishd], [],
     [$LIBVARNISHAPI_SBINDIR:$LIBVARNISHAPI_BINDIR:$PATH])
+
+VMOD_TESTS="$(cd $srcdir/src && echo tests/*.vtc)"
+AC_SUBST(VMOD_TESTS)
 
 AC_CONFIG_FILES([
 	Makefile
