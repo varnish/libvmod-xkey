@@ -120,6 +120,26 @@ Description
 	Purges all the objects that was hashed on the given
 	key. Returns the number of objects that was purged.
 
+softpurge
+---------
+
+Prototype
+	::
+
+	   softpurge(STRING S)
+
+Return value
+	INT
+
+Description
+
+	Performs a "soft purge" for all objects hashed on the given
+	key. Returns the number of objects that were purged.
+
+	A softpurge differs from a regular purge in that it resets an
+	object's TTL but keeps it available for grace mode and IMS for
+	the remainder of its configured grace and keep time.
+
 INSTALLATION
 ============
 

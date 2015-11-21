@@ -1,3 +1,4 @@
 $Module xkey 3 Surrogate keys support for Varnish Cache
 $Event vmod_event
 $Function INT purge(STRING)
+$Function INT softpurge(STRING)

@@ -1,0 +1,54 @@
+varnishtest "Test xkey.softpurge()"
+
+server s1 {
+	rxreq
+	txresp -hdr "xkey: asdf" -hdr "xkey: fdsa"
+} -start
+
+varnish v1 -arg "-p default_keep=0 -p default_grace=0" -vcl+backend {
+	import xkey from "${vmod_topbuild}/src/.libs/libvmod_xkey.so";
+
+	sub vcl_recv {
+		if (req.http.xkey-purge) {
+			if (xkey.softpurge(req.http.xkey-purge) != 0) {
+				return (synth(200, "Purged"));
+			} else {
+				return (synth(404, "No key"));
+			}
+		}
+	}
+
+	sub vcl_backend_response {
+		set beresp.ttl = 60s;
+		set beresp.grace = 0.5s;
+		set beresp.keep = 0s;
+	}
+} -start
+
+client c1 {
+	txreq
+	rxresp
+	expect resp.status == 200
+} -run
+
+varnish v1 -expect n_object == 1
+
+client c1 {
+	txreq -hdr "xkey-purge: fdsa"
+	rxresp
+	expect resp.status == 200
+	expect resp.msg == "Purged"
+} -run
+
+varnish v1 -expect n_object == 1
+
+varnish v1 -cliok "backend.set_health s1 sick"
+client c1 {
+	txreq
+	rxresp
+	expect resp.status == 200
+} -run
+
+delay 0.5
+
+varnish v1 -expect n_object == 0

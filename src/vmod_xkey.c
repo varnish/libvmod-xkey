@@ -477,13 +477,14 @@ xkey_cb(struct worker *wrk, struct objcore *objcore,
 
 /**************************/
 
-VCL_INT
-vmod_purge(VRT_CTX, VCL_STRING key)
+static VCL_INT
+purge(VRT_CTX, VCL_STRING key, VCL_INT do_soft)
 {
 	SHA256_CTX sha_ctx;
 	unsigned char digest[DIGEST_LEN];
 	struct xkey_hashhead *hashhead;
 	struct xkey_oc *oc;
+	double now;
 	int i;
 
 	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
@@ -504,15 +505,36 @@ vmod_purge(VRT_CTX, VCL_STRING key)
 		return (0);
 	}
 	i = 0;
+	now = ctx->req->t_prev;
 	VTAILQ_FOREACH(oc, &hashhead->ocs, list_hashhead) {
 		CHECK_OBJ_NOTNULL(oc->objcore, OBJCORE_MAGIC);
 		if (oc->objcore->flags & OC_F_BUSY)
 			continue;
-		EXP_Rearm(oc->objcore, oc->objcore->exp.t_origin, 0, 0, 0);
+		if (do_soft &&
+		    oc->objcore->exp.ttl <= (now - oc->objcore->exp.t_origin))
+			continue;
+		if (do_soft)
+			EXP_Rearm(oc->objcore, now, 0,
+			    oc->objcore->exp.grace, oc->objcore->exp.keep);
+		else
+			EXP_Rearm(oc->objcore, oc->objcore->exp.t_origin, 0,
+			    0, 0);
 		i++;
 	}
 	AZ(pthread_mutex_unlock(&mtx));
 	return (i);
+}
+
+VCL_INT __match_proto__(td_xkey_purge)
+vmod_purge(VRT_CTX, VCL_STRING key)
+{
+	return (purge(ctx, key, 0));
+}
+
+VCL_INT __match_proto__(td_xkey_softpurge)
+vmod_softpurge(VRT_CTX, VCL_STRING key)
+{
+	return (purge(ctx, key, 1));
 }
 
 int __match_proto__(vmod_event_f)
