@@ -118,7 +118,7 @@ VRB_GENERATE(xkey_octree, xkey_ptrkey, entry, xkey_ptrcmp);
 static int
 xkey_hashcmp(const struct xkey_hashkey *k1, const struct xkey_hashkey *k2)
 {
-	return (memcmp(k1->digest, k2->digest, sizeof k1->digest));
+	return (memcmp(k1->digest, k2->digest, sizeof(k1->digest)));
 }
 
 static int
@@ -159,7 +159,7 @@ xkey_hashhead_delete(struct xkey_hashhead **phead)
 	CHECK_OBJ_NOTNULL(head, XKEY_HASHHEAD_MAGIC);
 	AN(VTAILQ_EMPTY(&head->ocs));
 	if (xkey_pool.n_hashhead < POOL_MAX) {
-		memset(&head->key, 0, sizeof head->key);
+		memset(&head->key, 0, sizeof(head->key));
 		VTAILQ_INSERT_HEAD(&xkey_pool.hashheads, head, list);
 		xkey_pool.n_hashhead++;
 		return;
@@ -194,7 +194,7 @@ xkey_ochead_delete(struct xkey_ochead **phead)
 	CHECK_OBJ_NOTNULL(head, XKEY_OCHEAD_MAGIC);
 	AN(VTAILQ_EMPTY(&head->ocs));
 	if (xkey_pool.n_ochead < POOL_MAX) {
-		memset(&head->key, 0, sizeof head->key);
+		memset(&head->key, 0, sizeof(head->key));
 		VTAILQ_INSERT_HEAD(&xkey_pool.ocheads, head, list);
 		xkey_pool.n_ochead++;
 		return;
@@ -242,7 +242,7 @@ xkey_hashtree_lookup(const unsigned char *digest, unsigned len)
 	struct xkey_hashhead *head = NULL;
 
 	AN(digest);
-	assert(len == sizeof key.digest);
+	assert(len == sizeof(key.digest));
 	memcpy(&key.digest, digest, len);
 	pkey = VRB_FIND(xkey_hashtree, &xkey_hashtree, &key);
 	if (pkey != NULL)
@@ -258,7 +258,7 @@ xkey_hashtree_insert(const unsigned char *digest, unsigned len)
 
 	AN(digest);
 	head = xkey_hashhead_new();
-	assert(len == sizeof head->key.digest);
+	assert(len == sizeof(head->key.digest));
 	memcpy(&head->key.digest, digest, len);
 	key = VRB_INSERT(xkey_hashtree, &xkey_hashtree, &head->key);
 	if (key != NULL) {
@@ -399,38 +399,38 @@ xkey_cleanup()
 static void
 xkey_cb_insert(struct worker *wrk, struct objcore *objcore, void *priv)
 {
-	SHA256_CTX ctx;
+	SHA256_CTX sha_ctx;
 	unsigned char digest[DIGEST_LEN];
 	const char hdr_xkey[] = "xkey:";
 	const char hdr_h2[] = "X-HashTwo:";
-	const char *p, *p2;
+	const char *ep, *sp;
 
 	(void)priv;
 
 	CHECK_OBJ_NOTNULL(objcore, OBJCORE_MAGIC);
 
-	HTTP_FOREACH_PACK(wrk, objcore, p) {
-		if (strncasecmp(p, hdr_xkey, sizeof hdr_xkey - 1) &&
-		    strncasecmp(p, hdr_h2, sizeof hdr_h2 - 1))
+	HTTP_FOREACH_PACK(wrk, objcore, sp) {
+		if (strncasecmp(sp, hdr_xkey, sizeof(hdr_xkey) - 1) &&
+		    strncasecmp(sp, hdr_h2, sizeof(hdr_h2) - 1))
 			continue;
-		p = strchr(p, ':');
-		AN(p);
-		p++;
-		while (*p != '\0') {
-			while (isspace(*p))
-				p++;
-			p2 = p;
-			while (*p2 != '\0' && !isspace(*p2))
-				p2++;
-			if (p == p2)
+		sp = strchr(sp, ':');
+		AN(sp);
+		sp++;
+		while (*sp != '\0') {
+			while (isspace(*sp))
+				sp++;
+			ep = sp;
+			while (*ep != '\0' && !isspace(*ep))
+				ep++;
+			if (sp == ep)
 				break;
-			SHA256_Init(&ctx);
-			SHA256_Update(&ctx, p, p2 - p);
-			SHA256_Final(digest, &ctx);
+			SHA256_Init(&sha_ctx);
+			SHA256_Update(&sha_ctx, sp, ep - sp);
+			SHA256_Final(digest, &sha_ctx);
 			AZ(pthread_mutex_lock(&mtx));
-			xkey_insert(objcore, digest, sizeof digest);
+			xkey_insert(objcore, digest, sizeof(digest));
 			AZ(pthread_mutex_unlock(&mtx));
-			p = p2;
+			sp = ep;
 		}
 	}
 }
@@ -478,27 +478,27 @@ xkey_cb(struct worker *wrk, struct objcore *objcore,
 /**************************/
 
 VCL_INT
-vmod_purge(const struct vrt_ctx *vrt, const char *key)
+vmod_purge(VRT_CTX, VCL_STRING key)
 {
-	SHA256_CTX ctx;
+	SHA256_CTX sha_ctx;
 	unsigned char digest[DIGEST_LEN];
 	struct xkey_hashhead *hashhead;
 	struct xkey_oc *oc;
 	int i;
 
-	CHECK_OBJ_NOTNULL(vrt, VRT_CTX_MAGIC);
-	if (vrt->req == NULL)
+	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
+	if (ctx->req == NULL)
 		return (0);
 
 	if (!key || !*key)
 		return (0);
 
-	SHA256_Init(&ctx);
-	SHA256_Update(&ctx, key, strlen(key));
-	SHA256_Final(digest, &ctx);
+	SHA256_Init(&sha_ctx);
+	SHA256_Update(&sha_ctx, key, strlen(key));
+	SHA256_Final(digest, &sha_ctx);
 
 	AZ(pthread_mutex_lock(&mtx));
-	hashhead = xkey_hashtree_lookup(digest, sizeof digest);
+	hashhead = xkey_hashtree_lookup(digest, sizeof(digest));
 	if (hashhead == NULL) {
 		AZ(pthread_mutex_unlock(&mtx));
 		return (0);
