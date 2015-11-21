@@ -417,10 +417,10 @@ xkey_cb_insert(struct worker *wrk, struct objcore *objcore, void *priv)
 		AN(sp);
 		sp++;
 		while (*sp != '\0') {
-			while (isspace(*sp))
+			while (*sp == ' ')
 				sp++;
 			ep = sp;
-			while (*ep != '\0' && !isspace(*ep))
+			while (*ep != '\0' && *ep != ' ')
 				ep++;
 			if (sp == ep)
 				break;
