@@ -19,6 +19,7 @@ SYNOPSIS
     import xkey;
 
     # Example of purging using xkey.
+    #
     # The key to be purged is specified in the xkey-purge header.
     sub vcl_recv {
         if (req.http.xkey-purge) {
@@ -61,8 +62,8 @@ Preferably the secondary hash keys are set from the backend
 application, but can also be set from VCL in ``vcl_backend_response``
 as in the above example.
 
-Example use 1
--------------
+Example
+-------
 
 On an e-commerce site we have the backend application issue an xkey
 header for every product that is referenced on that page. So the
@@ -135,8 +136,8 @@ Description
 	key. Returns the number of objects that were purged.
 
 	A softpurge differs from a regular purge in that it resets an
-	object's TTL but keeps it available for grace mode and IMS for
-	the remainder of its configured grace and keep time.
+	object's TTL but keeps it available for grace mode and conditional
+	requests for the remainder of its configured grace and keep time.
 
 INSTALLATION
 ============
