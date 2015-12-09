@@ -25,4 +25,7 @@ EXTRA_DIST = \
 	vmod_xkey.vcc \
 	$(TESTS)
 
-CLEANFILES = $(builddir)/vcc_if.c $(builddir)/vcc_if.h
+CLEANFILES = $(builddir)/vcc_if.c \
+	$(builddir)/vcc_if.h \
+	$(builddir)/vmod_xkey.man.rst \
+	$(builddir)/vmod_xkey.rst
