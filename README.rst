@@ -157,4 +157,4 @@ COPYRIGHT
 This document is licensed under the same license as the
 libvmod-xkey project. See LICENSE for details.
 
-* Copyright (c) 2013-2015 Varnish Software
+* Copyright (c) 2015 Varnish Software Group
