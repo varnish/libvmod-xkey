@@ -482,12 +482,9 @@ purge(VRT_CTX, VCL_STRING key, VCL_INT do_soft)
 	unsigned char digest[DIGEST_LEN];
 	struct xkey_hashhead *hashhead;
 	struct xkey_oc *oc;
-	double now;
 	int i;
 
 	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
-	if (ctx->req == NULL)
-		return (0);
 
 	if (!key || !*key)
 		return (0);
@@ -503,16 +500,15 @@ purge(VRT_CTX, VCL_STRING key, VCL_INT do_soft)
 		return (0);
 	}
 	i = 0;
-	now = ctx->req->t_prev;
 	VTAILQ_FOREACH(oc, &hashhead->ocs, list_hashhead) {
 		CHECK_OBJ_NOTNULL(oc->objcore, OBJCORE_MAGIC);
 		if (oc->objcore->flags & OC_F_BUSY)
 			continue;
 		if (do_soft &&
-		    oc->objcore->exp.ttl <= (now - oc->objcore->exp.t_origin))
+		    oc->objcore->exp.ttl <= (ctx->now - oc->objcore->exp.t_origin))
 			continue;
 		if (do_soft)
-			EXP_Rearm(oc->objcore, now, 0,
+			EXP_Rearm(oc->objcore, ctx->now, 0,
 			    oc->objcore->exp.grace, oc->objcore->exp.keep);
 		else
 			EXP_Rearm(oc->objcore, oc->objcore->exp.t_origin, 0,
